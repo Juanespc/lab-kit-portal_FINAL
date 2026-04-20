@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f8;
+            margin: 0;
+            padding: 30px;
+        }
+
+        h1 {
+            color: #004b87;
+            margin-bottom: 10px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .logout-btn {
+            text-decoration: none;
+            background: #b22222;
+            color: white;
+            padding: 10px 16px;
+            border-radius: 8px;
+        }
+
+        .logout-btn:hover {
+            background: #8b1a1a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 14px;
+            border-bottom: 1px solid #ddd;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        th {
+            background: #004b87;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f9fbfc;
+        }
+
+        .solve-btn {
+            background: #228b22;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .solve-btn:hover {
+            background: #1a6e1a;
+        }
+
+        .empty {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+        }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <h1>Admin Dashboard</h1>
+        <a class="logout-btn" href="{{ url_for('admin_logout') }}">Logout</a>
+    </div>
+
+    <h2>Open Requests</h2>
+
+    {% if reports %}
+        <table>
+            <tr>
+                <th>Report ID</th>
+                <th>Kit</th>
+                <th>Component</th>
+                <th>Reported By</th>
+                <th>Description</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+
+            {% for report in reports %}
+            <tr>
+                <td>{{ report['report_id'] }}</td>
+                <td>{{ report['kit_name'] }}</td>
+                <td>{{ report['component_name'] }}</td>
+                <td>{{ report['display_name'] }}</td>
+                <td>{{ report['description'] }}</td>
+                <td>{{ report['status'] }}</td>
+                <td>
+                    <form action="{{ url_for('solve_report', report_id=report['report_id']) }}" method="POST">
+                        <button class="solve-btn" type="submit">Mark as Solved</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    {% else %}
+        <div class="empty">
+            <p>No open reports.</p>
+        </div>
+    {% endif %}
+</body>
+</html>
